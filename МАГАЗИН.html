@@ -1,0 +1,682 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Станция 6: Магазин</title>
+<style>
+:root {
+  --green:#176b50;
+  --mint:#e8f5ee;
+  --gold:#ffd166;
+  --ink:#20312b;
+  --muted:#687a72;
+  --paper:#fffdf8;
+}
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  padding:20px;
+  font-family:Arial,sans-serif;
+  color:var(--ink);
+  background:linear-gradient(135deg,#eaf6ef,#fdf4dc);
+  min-height:100vh;
+}
+.wrap { max-width:980px; margin:auto; }
+
+header {
+  background:linear-gradient(120deg,#145b46,#24815e);
+  color:white;
+  border-radius:23px;
+  padding:25px 29px;
+  box-shadow:0 10px 28px #174b3822;
+}
+.kicker {
+  font-size:12px;
+  letter-spacing:1.4px;
+  font-weight:bold;
+  color:#c9f0d9;
+}
+h1 {
+  font-size:clamp(27px,5vw,40px);
+  margin:9px 0;
+}
+header p {
+  color:#e1f4e9;
+  font-size:17px;
+  line-height:1.5;
+}
+.instruction {
+  margin-top:17px;
+  padding:13px 15px;
+  background:#ffffff18;
+  border:1px solid #ffffff35;
+  border-radius:13px;
+  line-height:1.5;
+}
+.progress {
+  display:flex;
+  gap:8px;
+  margin-top:19px;
+}
+.dot {
+  height:8px;
+  border-radius:20px;
+  background:#ffffff55;
+  flex:1;
+}
+.dot.active { background:var(--gold); }
+.dot.done { background:#b8f0c8; }
+
+main { margin-top:19px; }
+
+.panel {
+  background:var(--paper);
+  border:1px solid #e8eee8;
+  border-radius:21px;
+  padding:22px;
+  box-shadow:0 8px 24px #294c3710;
+}
+.teamhead {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.team {
+  font-size:21px;
+  margin:0;
+}
+.tag {
+  background:var(--mint);
+  color:var(--green);
+  border-radius:30px;
+  padding:7px 11px;
+  font-size:13px;
+  font-weight:bold;
+  white-space:nowrap;
+}
+.customer {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin:8px 0 17px;
+}
+.avatar {
+  width:55px;
+  height:55px;
+  border-radius:17px;
+  background:#fff0c7;
+  display:grid;
+  place-items:center;
+  font-size:31px;
+}
+.customer h3 { margin:0; }
+.customer small {
+  display:block;
+  color:var(--muted);
+  margin-top:4px;
+}
+h2 { font-size:20px; }
+
+.tablewrap { overflow-x:auto; }
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:560px;
+}
+th,td {
+  padding:12px 9px;
+  border-bottom:1px solid #e5ece6;
+  text-align:center;
+}
+th {
+  font-size:14px;
+  color:#52665b;
+  background:#f2f7f2;
+}
+td:first-child,th:first-child { text-align:left; }
+
+.product {
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+.emoji {
+  font-size:25px;
+  width:30px;
+  text-align:center;
+}
+input {
+  width:105px;
+  max-width:100%;
+  padding:10px;
+  border:2px solid #dce8df;
+  border-radius:10px;
+  font-size:16px;
+  text-align:center;
+}
+input:disabled {
+  background:#edf6ef;
+  color:#17613e;
+  font-weight:bold;
+}
+.answer {
+  width:100%;
+  text-align:left;
+  padding:12px;
+  font-size:17px;
+}
+button {
+  border:0;
+  border-radius:12px;
+  padding:13px 17px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.primary {
+  background:var(--green);
+  color:white;
+  width:100%;
+  margin-top:7px;
+}
+.primary:disabled { opacity:.55; }
+
+.feedback {
+  display:none;
+  padding:12px;
+  border-radius:12px;
+  margin-top:11px;
+  line-height:1.45;
+}
+.feedback.good {
+  display:block;
+  background:#e5f6e9;
+  color:#17613e;
+}
+.feedback.bad {
+  display:block;
+  background:#fff0e8;
+  color:#9a4728;
+}
+.hidden { display:none!important; }
+
+.payment {
+  margin-top:17px;
+  border:2px dashed #e5c46c;
+  background:#fff9e9;
+  border-radius:14px;
+  padding:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.payment strong {
+  font-size:23px;
+  color:#946512;
+}
+.taskbox {
+  margin-top:18px;
+  padding-top:17px;
+  border-top:1px solid #e5ece6;
+}
+.field { margin:14px 0; }
+label {
+  display:block;
+  font-weight:bold;
+  margin-bottom:7px;
+}
+.navigation {
+  display:flex;
+  justify-content:flex-end;
+  margin-top:17px;
+}
+.next {
+  background:#203d32;
+  color:white;
+  min-width:210px;
+}
+.finish { text-align:center; padding:15px 5px; }
+.trophy { font-size:58px; }
+.secret {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  margin:18px 0;
+}
+.secret span {
+  background:#fff4cc;
+  border:1px solid #f0ce6c;
+  border-radius:10px;
+  padding:10px 13px;
+  font-weight:bold;
+  font-size:21px;
+  color:#805b08;
+}
+@media(max-width:600px) {
+  body { padding:12px; }
+  .panel { padding:16px; }
+  header { padding:20px; }
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<header>
+  <h1>🛒 Станция 6: Магазин</h1>
+  <p>
+    Сегодня вы — помощники кассиров! Помогите кассиру правильно рассчитать стоимость товаров и выдать покупателям сдачу.
+  </p>
+  <div class="instruction">
+    <b>Задание:</b> сначала вычислите стоимость каждого
+    товара и впишите ответы в последний столбец.
+    Когда все ответы будут верными, найдите общую стоимость покупки и посчитайте, сколько сдачи нужно вернуть покупателю.
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main id="game"></main>
+
+<section class="panel hidden" id="finish">
+  <div class="finish">
+    <div class="trophy">🏆</div>
+    <h2>Все покупатели обслужены!</h2>
+
+  <p>
+    Благодаря вам магазин успешно справился со всеми заказами!
+    Спасибо за точность, внимательность и математическую смекалку!
+  </p>
+
+  <div class="success">
+    🎊 <strong>Станция успешно пройдена!</strong>
+  </div>
+</section>
+
+<style>
+.finish {
+  text-align: center;
+  padding: 28px 20px;
+  background: linear-gradient(145deg, #fffdf5, #e8f5ee);
+  border-radius: 24px;
+  border: 2px solid #d7eadc;
+}
+
+.trophy {
+  font-size: 65px;
+  margin-bottom: 10px;
+}
+
+.finish h2 {
+  color: #176b50;
+  font-size: 30px;
+  margin: 12px 0;
+}
+
+.finish p {
+  max-width: 550px;
+  margin: 0 auto;
+  color: #52665b;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.success {
+  margin: 24px auto 0;
+  padding: 17px;
+  max-width: 430px;
+  text-align: center;
+  background: #fff3cc;
+  border: 2px solid #e5c46c;
+  border-radius: 15px;
+  color: #946512;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px #e5c46c33;
+}
+</style>
+
+</div>
+
+<script>
+const customers = [
+{
+ team:"1 команда · 6-А класс",
+ name:"Покупатель № 1",
+ emoji:"👩",
+ part:"ВОК",
+ items:[
+  ["🍪","Печенье",14.20,2],
+  ["🧀","Сыр",32.50,2],
+  ["🥤","Напиток",21.30,2]
+ ],
+ paid:200
+},
+{
+ team:"2 команда · 6-Б класс",
+ name:"Покупатель № 2",
+ emoji:"👨",
+ part:"КРЫ",
+ items:[
+  ["🍌","Бананы",24.50,2],
+  ["🍫","Шоколад",16.20,3],
+  ["🧃","Сок",13.40,1]
+ ],
+ paid:150
+},
+{
+ team:"3 команда · 6-В класс",
+ name:"Покупатель № 3",
+ emoji:"👧",
+ part:"ТИ",
+ items:[
+  ["📓","Тетради",12.20,3],
+  ["🖊️","Ручки",8.25,4],
+  ["📁","Папки",16.40,1]
+ ],
+ paid:150
+},
+{
+ team:"4 команда · 6-Г класс",
+ name:"Покупатель № 4",
+ emoji:"🧔",
+ part:"УМ",
+ items:[
+  ["🍚","Рис",26.20,2],
+  ["🫒","Масло",45.50,2],
+  ["🍬","Сахар",18.30,2]
+ ],
+ paid:200
+},
+{
+ team:"5 команда · 6-Д класс",
+ name:"Покупатель № 5",
+ emoji:"👩‍🦱",
+ part:"ТЕМА",
+ items:[
+  ["🍎","Яблоки",18.20,2],
+  ["🥛","Молоко",12.50,2],
+  ["🍞","Хлеб",15.30,2] 
+ ],
+ paid:120
+}
+];
+
+let current = 0;
+
+const $ = id => document.getElementById(id);
+
+const fmt = n =>
+ Number(n).toFixed(2).replace(".",",");
+
+const lineTotal = x =>
+ Number((x[2]*x[3]).toFixed(2));
+
+const total = c =>
+ Number(c.items.reduce((s,x)=>s+lineTotal(x),0).toFixed(2));
+
+const parse = v =>
+ Number(String(v).trim().replace(",","."));
+
+function progress() {
+ $("progress").innerHTML = customers.map((c,i)=>
+  `<div class="dot ${
+   i<current ? "done" :
+   i===current ? "active" : ""
+  }"></div>`
+ ).join("");
+}
+
+function render() {
+ const c = customers[current];
+ progress();
+
+ $("game").innerHTML = `
+ <section class="panel">
+
+ <div class="teamhead">
+  <h2 class="team">${c.team}</h2>
+  <span class="tag">Покупатель ${current+1} из 5</span>
+ </div>
+
+ <div class="customer">
+  <div class="avatar">${c.emoji}</div>
+  <div>
+   <h3>${c.name}</h3>
+   <small>Здравствуйте! Вот мои покупки.</small>
+  </div>
+ </div>
+
+ <h2>🧺 Корзина покупателя</h2>
+
+ <div class="tablewrap">
+ <table>
+ <thead>
+ <tr>
+  <th>Товар</th>
+  <th>Цена за единицу (руб.)</th>
+  <th>Количество</th>
+  <th>Стоимость (руб.)</th>
+ </tr>
+ </thead>
+ <tbody>
+ ${c.items.map((x,i)=>`
+ <tr>
+  <td>
+   <div class="product">
+    <span class="emoji">${x[0]}</span>
+    <b>${x[1]}</b>
+   </div>
+  </td>
+  <td>${fmt(x[2])}</td>
+  <td>${String(x[3]).replace(".",",")}</td>
+  <td>
+   <input id="line${i}" inputmode="decimal"
+   placeholder="?">
+  </td>
+ </tr>
+ `).join("")}
+ </tbody>
+ </table>
+ </div>
+
+ <button class="primary" id="checkLines"
+ onclick="checkLines()">
+ Проверить стоимость товаров
+ </button>
+
+ <div class="feedback" id="lineFeedback"></div>
+
+ <div id="paymentArea" class="hidden">
+
+  <div class="payment">
+   <div>
+    <b>💵 Покупатель даёт:</b>
+   </div>
+   <strong>${fmt(c.paid)} руб.</strong>
+  </div>
+
+  <div class="taskbox">
+
+   <div class="field">
+    <label>1. Сколько стоят все покупки?</label>
+    <input class="answer" id="totalAnswer"
+    inputmode="decimal" placeholder="Введите общую стоимость">
+   </div>
+
+   <button class="primary" id="checkTotal"
+   onclick="checkTotal()">
+    Проверить итоговую стоимость
+   </button>
+
+   <div class="feedback" id="totalFeedback"></div>
+
+   <div id="changeArea" class="hidden">
+    <div class="field">
+     <label>2. Сколько сдачи нужно дать покупателю?</label>
+     <input class="answer" id="changeAnswer"
+     inputmode="decimal" placeholder="Введите сумму сдачи">
+    </div>
+
+    <button class="primary" id="checkChange"
+    onclick="checkChange()">
+     Проверить сдачу
+    </button>
+
+    <div class="feedback" id="changeFeedback"></div>
+   </div>
+
+  </div>
+ </div>
+
+ <div class="navigation">
+  <button class="next hidden" id="nextBtn"
+  onclick="nextCustomer()">
+   Следующий покупатель →
+  </button>
+ </div>
+
+ </section>`;
+}
+
+function feedback(id,msg,type) {
+ const el = $(id);
+ el.textContent = msg;
+ el.className = "feedback " + type;
+}
+
+function checkLines() {
+ const c = customers[current];
+ let all = true;
+
+ c.items.forEach((x,i)=>{
+  const field = $("line"+i);
+  const v = field.value.trim();
+
+  if(!v || !Number.isFinite(parse(v)) ||
+     Math.abs(parse(v)-lineTotal(x))>=0.005) {
+   all = false;
+   field.style.borderColor = "#d97852";
+  } else {
+   field.value = fmt(lineTotal(x));
+   field.disabled = true;
+   field.style.borderColor = "#8bc99d";
+  }
+ });
+
+ if(all) {
+  feedback(
+   "lineFeedback",
+   "✓ Верно! Стоимость каждого товара рассчитана правильно. Переходим к следующим заданиям!",
+   "good"
+  );
+  $("paymentArea").classList.remove("hidden");
+  $("checkLines").disabled = true;
+ } else {
+  feedback(
+   "lineFeedback",
+   "Есть ошибка. Проверьте каждую строку: умножьте цену за единицу на количество товара.",
+   "bad"
+  );
+ }
+}
+
+function checkTotal() {
+ const v = $("totalAnswer").value.trim();
+ const expected = total(customers[current]);
+
+ if(!v) {
+  feedback("totalFeedback","Введите общую стоимость покупок.","bad");
+  return;
+ }
+
+ if(Number.isFinite(parse(v)) &&
+    Math.abs(parse(v)-expected)<0.005) {
+
+  feedback(
+   "totalFeedback",
+   "✓ Верно! Общая стоимость — "+fmt(expected)+
+   " руб. Теперь рассчитайте сдачу.",
+   "good"
+  );
+
+  $("totalAnswer").disabled = true;
+  $("checkTotal").disabled = true;
+  $("changeArea").classList.remove("hidden");
+
+ } else {
+  feedback(
+   "totalFeedback",
+   "Проверьте сложение стоимости всех товаров.",
+   "bad"
+  );
+ }
+}
+
+function checkChange() {
+ const v = $("changeAnswer").value.trim();
+ const c = customers[current];
+ const expected = Number((c.paid-total(c)).toFixed(2));
+
+ if(!v) {
+  feedback("changeFeedback","Введите сумму сдачи.","bad");
+  return;
+ }
+
+ if(Number.isFinite(parse(v)) &&
+    Math.abs(parse(v)-expected)<0.005) {
+
+  feedback(
+   "changeFeedback",
+   "✓ Верно! Сдача составляет "+fmt(expected)+
+   " руб. Команда получает часть секретного слова: "+c.part+".",
+   "good"
+  );
+
+  $("changeAnswer").disabled = true;
+  $("checkChange").disabled = true;
+  $("nextBtn").classList.remove("hidden");
+
+  $("nextBtn").textContent =
+   current===4 ? "Завершить игру 🏆" :
+   "Следующий покупатель →";
+
+ } else {
+  feedback(
+   "changeFeedback",
+   "Неверно. Вычтите общую стоимость покупок из суммы, которую дал покупатель.",
+   "bad"
+  );
+ }
+}
+
+function nextCustomer() {
+ if(current<4) {
+  current++;
+  render();
+ } else {
+  $("game").classList.add("hidden");
+  $("finish").classList.remove("hidden");
+  $("progress").innerHTML =
+   customers.map(()=>'<div class="dot done"></div>').join("");
+ }
+}
+
+function restart() {
+ current=0;
+ $("finish").classList.add("hidden");
+ $("game").classList.remove("hidden");
+ render();
+}
+
+render();
+</script>
+</body>
+</html>
